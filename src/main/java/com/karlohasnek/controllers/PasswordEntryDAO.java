@@ -1,6 +1,7 @@
 package com.karlohasnek.controllers;
 
 import com.karlohasnek.models.PasswordEntry;
+import com.karlohasnek.models.User;
 import jakarta.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -73,4 +74,6 @@ public class PasswordEntryDAO {
             e.printStackTrace();
         }
     }
+
+
 }

@@ -58,5 +58,16 @@ public class UserDAO {
             e.printStackTrace();
         }
     }
+
+    public User getUserWithPasswordEntries(Long userId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("from User u left join fetch u.passwordEntries where u.id = :userId", User.class)
+                    .setParameter("userId", userId)
+                    .uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
 

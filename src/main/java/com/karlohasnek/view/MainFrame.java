@@ -11,7 +11,15 @@ import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
 
 public class MainFrame extends JFrame {
 
@@ -75,6 +83,7 @@ public class MainFrame extends JFrame {
                         setVisible(true);
                         activateComps();
                         updatePasswords();
+                        loginFrame.dispose();
                     } else {
                         JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -123,69 +132,69 @@ public class MainFrame extends JFrame {
      * Defines the behavior of the components when clicked.
      */
     private void activateComps() {
-//
-//        mainActionListener = new MainActionListener();
-//        mainActionListener.setMainFrame(this);
-//        mainActionListener.setPasswordDialogFrame(passwordDialogFrame);
-//        passwordDialogFrame.setMainActionListener(mainActionListener);
-//        passwordDialogFrame.activateComps();
-//
-//        exportItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                fileChooser = new JFileChooser();
-//                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(".txt file", "txt"));
-//                fileChooser.setAcceptAllFileFilterUsed(true);
-//                fileChooser.setSelectedFile(new File("passwords.txt"));
-//                int returnVal = fileChooser.showSaveDialog(MainFrame.this);
-//                if (returnVal == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().getName().endsWith(".txt")) {
+
+        mainActionListener = new MainActionListener();
+        mainActionListener.setMainFrame(this);
+        mainActionListener.setPasswordDialogFrame(passwordDialogFrame);
+        passwordDialogFrame.setMainActionListener(mainActionListener);
+        passwordDialogFrame.activateComps();
+
+        exportItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fileChooser = new JFileChooser();
+                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(".txt file", "txt"));
+                fileChooser.setAcceptAllFileFilterUsed(true);
+                fileChooser.setSelectedFile(new File("passwords.txt"));
+                int returnVal = fileChooser.showSaveDialog(MainFrame.this);
+                if (returnVal == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().getName().endsWith(".txt")) {
 //                    save2File(fileChooser.getSelectedFile());
-//                    JOptionPane.showMessageDialog(MainFrame.this, "File saved", "File saved", JOptionPane.INFORMATION_MESSAGE);
-//                } else {
-//                    JOptionPane.showMessageDialog(MainFrame.this, "ERROR: File not saved", "File not saved", JOptionPane.ERROR_MESSAGE);
-//                }
-//            }
-//        });
-//
-//        addItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("ADD ITEM BUTTON PRESSED");
-//                passwordDialogFrame.setVisible(true);
-//            }
-//        });
-//
-//        generateItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                new PasswordGenerator();
-//            }
-//        });
-//
-//        detailsItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                new AccountDetailsFrame(user);
-//            }
-//        });
-//
-//        aboutItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String message = "Password Manager v1.0\nCreator: Karlo Hasnek";
-//                JOptionPane.showMessageDialog(MainFrame.this, message, "About", JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        });
-//
-//        customerServiceItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String message = "For any questions or problems, please contact us any time.\n\n" +
-//                        "email:  karlohasnek@outlook.com" +
-//                        "\nphone: +385 91 234 5678";
-//                JOptionPane.showMessageDialog(MainFrame.this, message, "Customer service", JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        });
+                    JOptionPane.showMessageDialog(MainFrame.this, "File saved", "File saved", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(MainFrame.this, "ERROR: File not saved", "File not saved", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        addItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("ADD ITEM BUTTON PRESSED");
+                passwordDialogFrame.setVisible(true);
+            }
+        });
+
+        generateItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new PasswordGenerator();
+            }
+        });
+
+        detailsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AccountDetailsFrame(user);
+            }
+        });
+
+        aboutItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String message = "Password Manager v1.0\nCreator: Karlo Hasnek";
+                JOptionPane.showMessageDialog(MainFrame.this, message, "About", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        customerServiceItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String message = "For any questions or problems, please contact us any time.\n\n" +
+                        "email:  karlohasnek@outlook.com" +
+                        "\nphone: +385 91 234 5678";
+                JOptionPane.showMessageDialog(MainFrame.this, message, "Customer service", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
     }
 
     /**
@@ -223,5 +232,19 @@ public class MainFrame extends JFrame {
 
 
         return jMenuBar;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void updatePasswords() {
+        passwordsPanel.setPasswords(passwordEntryDAO.getAllPasswordEntries(user.getId()));
+        System.out.println("updatePasswords of passwordsPanel");
+        passwordsPanel.updatePasswords();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
