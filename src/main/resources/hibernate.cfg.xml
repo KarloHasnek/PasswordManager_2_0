@@ -1,0 +1,15 @@
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://161.35.198.205:3306/password_manager?useSSL=false</property>
+        <property name="hibernate.connection.username">karlohasnek</property>
+        <property name="hibernate.connection.password">NOP25TEST</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <mapping class="com.karlohasnek.models.User"/>
+        <mapping class="com.karlohasnek.models.PasswordEntry"/>
+        <mapping class="com.karlohasnek.models.Credential"/>
+    </session-factory>
+</hibernate-configuration>

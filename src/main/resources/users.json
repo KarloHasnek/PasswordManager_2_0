@@ -1,0 +1,8 @@
+[
+  {"name":"Karlo","surname":"Hasnek","age":"09/03/2002",
+    "credentials":{"KarloH":"password"},"passwords":{"google.com":{"Karlo":"password"}}},
+  {"name":"admin","surname":"admin","age":"16/10/2020",
+    "credentials":{"admin":"admin"},"passwords":{"google.com":{"KarloH":"password"},"yahoo.com":{"KarloHasnek":"password2"},"bing.com":{"karlo":"karlo"},"facebook.com":{"Karlo":"karloSifra"},"instagram.com":{"Karloh":"testPassword"}}},
+  {"name":"Test","surname":"User","age":"20/08/1995",
+    "credentials":{"TestUserNameChanged":"testing"},"passwords":{"test.net":{"TestUsername":"testPassword"},"Test2.com":{"Test_for_pwd_generator":"ule6ZBHSF3U"}}}
+]
