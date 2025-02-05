@@ -1,5 +1,8 @@
 package com.karlohasnek.view;
 
+import com.karlohasnek.controllers.UserDAO;
+import com.karlohasnek.models.Credential;
+import com.karlohasnek.models.User;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -25,7 +28,7 @@ public class RegisterFrame extends JFrame {
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
     private JButton registerButton;
-    private Date date;
+    private UserDAO userDAO;
 
     /**
      * Constructor for the register frame.
@@ -63,6 +66,7 @@ public class RegisterFrame extends JFrame {
         SimpleDateFormat format = editor.getFormat();
         format.setLenient(false);
         ageSpinner.setEditor(editor);
+        userDAO = new UserDAO();
     }
 
     /**
@@ -107,47 +111,51 @@ public class RegisterFrame extends JFrame {
      * Activates the components of the frame.
      */
     private void activateComps() {
-//
-//        registerButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//                System.out.println("REGISTER BUTTON WAS PRESSSED");
-//                String name = nameField.getText();
-//                String surname = surnameField.getText();
-//                String age = new SimpleDateFormat("dd/MM/yyyy").format(ageSpinner.getValue());
-//                String username = usernameField.getText();
-//
-//                if (name.isEmpty() || surname.isEmpty() || age.isEmpty() || username.isEmpty() || passwordField.getPassword().length == 0 || confirmPasswordField.getPassword().length == 0) {
-//                    System.out.println("Please fill all the fields!");
-//                    resetPasswordField();
-//                    String messageF = "Something went wrong!\nPlease fill all the fields.";
-//                    JOptionPane.showMessageDialog(RegisterFrame.this, messageF, "Error", JOptionPane.ERROR_MESSAGE);
-//                } else if (DBHandler.isUsernamePresent(username)) {
-//                    System.out.println("Username already exists!");
-//                    usernameField.setText("");
-//                    resetPasswordField();
-//                    String message1 = "Username already exists!\nPlease choose another one.";
-//                    JOptionPane.showMessageDialog(RegisterFrame.this, message1, "Error", JOptionPane.ERROR_MESSAGE);
-//                } else if (Arrays.toString(passwordField.getPassword()).equals(Arrays.toString(confirmPasswordField.getPassword()))) {
-//                    System.out.println("Passwords match");
-//                    String password = AUXCLS.convertPasswordToString(passwordField.getPassword());
-//                    Map<String, String> map = new HashMap<>();
-//                    map.put(username, password);
-//                    DBHandler.addToDB(new User(name, surname, age, map));
-//                    String message2 = "You have successfully registered!";
-//                    JOptionPane.showMessageDialog(RegisterFrame.this, message2, "Registration Complete", JOptionPane.INFORMATION_MESSAGE);
-//                    if (JOptionPane.OK_OPTION == 0) {
-//                        dispose();
-//                    }
-//                } else {
-//                    System.out.println("Passwords don't match");
-//                    resetPasswordField();
-//                    String message = "Oops! Seems like passwords don't match.\nPlease try again";
-//                    JOptionPane.showMessageDialog(RegisterFrame.this, message, "Password missmatch", JOptionPane.WARNING_MESSAGE);
-//                }
-//            }
-//        });
+
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                System.out.println("REGISTER BUTTON WAS PRESSSED");
+                String name = nameField.getText();
+                String surname = surnameField.getText();
+                String age = new SimpleDateFormat("dd/MM/yyyy").format(ageSpinner.getValue());
+                String username = usernameField.getText();
+
+                if (name.isEmpty() || surname.isEmpty() || age.isEmpty() || username.isEmpty() || passwordField.getPassword().length == 0 || confirmPasswordField.getPassword().length == 0) {
+                    System.out.println("Please fill all the fields!");
+                    resetPasswordField();
+                    String messageF = "Something went wrong!\nPlease fill all the fields.";
+                    JOptionPane.showMessageDialog(RegisterFrame.this, messageF, "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (userDAO.checkUserExists(usernameField.getText())) {
+                    System.out.println("Username already exists!");
+                    usernameField.setText("");
+                    resetPasswordField();
+                    String message1 = "Username already exists!\nPlease choose another one.";
+                    JOptionPane.showMessageDialog(RegisterFrame.this, message1, "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (Arrays.toString(passwordField.getPassword()).equals(Arrays.toString(confirmPasswordField.getPassword()))) {
+                    System.out.println("Passwords match");
+                    String password = convertPasswordToString(passwordField.getPassword());
+                    Map<String, String> map = new HashMap<>();
+                    map.put(username, password);
+                    System.out.println("age: " + age);
+                    int ageInt = calculateAge((Date) ageSpinner.getValue());
+                    User newUser = new User(name, surname, ageInt);
+                    newUser.setCredential(new Credential(username, password, newUser));
+                    userDAO.saveUser(newUser);
+                    String message2 = "You have successfully registered!";
+                    JOptionPane.showMessageDialog(RegisterFrame.this, message2, "Registration Complete", JOptionPane.INFORMATION_MESSAGE);
+                    if (JOptionPane.OK_OPTION == 0) {
+                        dispose();
+                    }
+                } else {
+                    System.out.println("Passwords don't match");
+                    resetPasswordField();
+                    String message = "Oops! Seems like passwords don't match.\nPlease try again";
+                    JOptionPane.showMessageDialog(RegisterFrame.this, message, "Password missmatch", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
     }
 
     /**
@@ -156,5 +164,35 @@ public class RegisterFrame extends JFrame {
     private void resetPasswordField() {
         passwordField.setText("");
         confirmPasswordField.setText("");
+    }
+
+    /**
+     * This method converts a char array to a String.
+     *
+     * @param password the char array to be converted
+     * @return the converted String
+     */
+    private String convertPasswordToString(char[] password) {
+        String sb = "";
+        for (char c : password) {
+            sb += c;
+        }
+        return sb;
+    }
+
+    private int calculateAge(Date birthDate) {
+        Calendar birthCalendar = Calendar.getInstance();
+        birthCalendar.setTime(birthDate);
+
+        Calendar currentCalendar = Calendar.getInstance();
+        int age = currentCalendar.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR);
+
+        if (currentCalendar.get(Calendar.MONTH) < birthCalendar.get(Calendar.MONTH) ||
+                (currentCalendar.get(Calendar.MONTH) == birthCalendar.get(Calendar.MONTH) &&
+                        currentCalendar.get(Calendar.DAY_OF_MONTH) < birthCalendar.get(Calendar.DAY_OF_MONTH))) {
+            age--;
+        }
+
+        return age;
     }
 }
