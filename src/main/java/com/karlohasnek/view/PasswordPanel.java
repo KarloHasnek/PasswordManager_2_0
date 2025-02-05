@@ -18,6 +18,7 @@ public class PasswordPanel extends JPanel {
     private JLabel password;
     private String passwordString;
     private JButton showPasswordButton;
+    private JButton editPasswordButton;
     private JButton deletePasswordButton;
     private PasswordsPanel passwordsPanel;
 
@@ -44,6 +45,7 @@ public class PasswordPanel extends JPanel {
      */
     private void initComps() {
         showPasswordButton = new JButton("Show");
+        editPasswordButton = new JButton("Edit");
         deletePasswordButton = new JButton("Delete");
         setBorder(BorderFactory.createLineBorder(Color.lightGray));
     }
@@ -52,12 +54,13 @@ public class PasswordPanel extends JPanel {
      * Lays out the components.
      */
     private void layoutComps() {
-        setLayout(new MigLayout("fillx, insets 0, gapx 20, wrap 5, w 675:675:675"));
+        setLayout(new MigLayout("fillx, insets 0, gapx 10, wrap 6, w 675:675:675"));
         add(website, "gapbefore 5, growx, width 25%");
         add(username, "growx, width 25%");
         add(password, "growx, width 25%");
-        add(showPasswordButton, "growx, width 25%, w 75:75:75");
-        add(deletePasswordButton, "growx, width 25%, w 75:75:75, align right");
+        add(showPasswordButton, "growx, width 25%, w 70:70:70");
+        add(editPasswordButton, "growx, width 25%, w 70:70:70");
+        add(deletePasswordButton, "growx, width 25%, w 70:70:70, align right");
     }
 
     /**
@@ -92,6 +95,21 @@ public class PasswordPanel extends JPanel {
                 if (option == 0) {
                     passwordsPanel.removePassword(website.getText(), username.getText());
                 }
+            }
+        });
+
+        editPasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String newPassword = JOptionPane.showInputDialog(null, "Enter new password for: " + website.getText(), "Change Password", JOptionPane.PLAIN_MESSAGE);
+
+                if (newPassword != null && !newPassword.isEmpty()) {
+                    passwordsPanel.editPassword(website.getText(), username.getText(), newPassword);
+                    JOptionPane.showMessageDialog(null, "Password for " + website.getText() + " successfully changed.", "Password Changed", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Password not changed.", "Password Not Changed", JOptionPane.INFORMATION_MESSAGE);
+                }
+
             }
         });
     }

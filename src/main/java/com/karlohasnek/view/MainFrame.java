@@ -6,6 +6,8 @@ import com.karlohasnek.controllers.PasswordEntryDAO;
 import com.karlohasnek.controllers.UserDAO;
 import com.karlohasnek.models.Credential;
 import com.karlohasnek.models.User;
+import com.karlohasnek.strategies.ExportJson;
+import com.karlohasnek.strategies.ExportStrategy;
 import jakarta.persistence.Query;
 import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;

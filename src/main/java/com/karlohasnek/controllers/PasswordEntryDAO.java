@@ -68,7 +68,6 @@ public class PasswordEntryDAO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            // Fetch the current entity from DB
             PasswordEntry existingEntry = session.get(PasswordEntry.class, passwordEntry.getId());
             if (existingEntry != null) {
                 existingEntry.setPassword(passwordEntry.getPassword());
@@ -103,5 +102,23 @@ public class PasswordEntryDAO {
             if (transaction != null) transaction.rollback();
             e.printStackTrace();
         }
+    }
+
+    public PasswordEntry getPasswordEntry(String website, String username) {
+
+        PasswordEntry passwordEntry = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query query = session.createQuery("from PasswordEntry p where p.website = :website and p.username = :username", PasswordEntry.class);
+            query.setParameter("website", website);
+            query.setParameter("username", username);
+            passwordEntry = (PasswordEntry) query.getSingleResult();
+        } catch (NullPointerException e) {
+            System.err.println("Password entry not found.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return passwordEntry;
     }
 }

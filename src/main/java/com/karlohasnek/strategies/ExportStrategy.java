@@ -1,4 +1,4 @@
-package com.karlohasnek.view;
+package com.karlohasnek.strategies;
 
 import com.karlohasnek.models.PasswordEntry;
 

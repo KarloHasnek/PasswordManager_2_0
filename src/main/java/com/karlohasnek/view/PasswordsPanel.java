@@ -66,4 +66,12 @@ public class PasswordsPanel extends JPanel {
         passwords.remove(passwords.stream().filter(p -> p.getWebsite().equals(website) && p.getUsername().equals(username)).findFirst().get());
         updatePasswords();
     }
+
+    public void editPassword(String website, String username, String newPassword) {
+        PasswordEntry passwordEntry = passwordEntryDAO.getPasswordEntry(website, username);
+        passwordEntry.setPassword(newPassword);
+        passwordEntryDAO.updatePasswordEntry(passwordEntry);
+        passwords.stream().filter(p -> p.getWebsite().equals(website) && p.getUsername().equals(username)).findFirst().get().setPassword(newPassword);
+        updatePasswords();
+    }
 }

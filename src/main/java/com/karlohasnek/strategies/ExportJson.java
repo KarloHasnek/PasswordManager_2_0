@@ -1,8 +1,7 @@
-package com.karlohasnek.view;
+package com.karlohasnek.strategies;
 
 import com.google.gson.*;
 import com.karlohasnek.models.PasswordEntry;
-import com.karlohasnek.view.ExportStrategy;
 import org.hibernate.proxy.HibernateProxy;
 import java.io.FileWriter;
 import java.io.IOException;
