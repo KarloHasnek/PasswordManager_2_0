@@ -10,8 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Data Access Object (DAO) for managing {@link PasswordEntry} entities.
+ * Provides CRUD operations and utility methods for interacting with password-related data in the database.
+ */
 public class PasswordEntryDAO {
 
+    /**
+     * Saves a new password entry to the database.
+     *
+     * @param passwordEntry The {@link PasswordEntry} object to be saved.
+     */
     public void savePasswordEntry(PasswordEntry passwordEntry) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -24,15 +33,14 @@ public class PasswordEntryDAO {
         }
     }
 
-    public PasswordEntry getPasswordEntryById(Integer id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(PasswordEntry.class, id);
-        }
-    }
-
+    /**
+     * Retrieves all password entries for a specific user.
+     *
+     * @param userId The ID of the user whose password entries are to be retrieved.
+     * @return A list of {@link PasswordEntry} objects associated with the user.
+     */
     public List<PasswordEntry> getAllPasswordEntries(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Query for PasswordEntries associated with a specific userId
             Query query = session.createQuery("from PasswordEntry p where p.user.id = :userId", PasswordEntry.class);
             query.setParameter("userId", userId);
             return query.getResultList();
@@ -42,30 +50,12 @@ public class PasswordEntryDAO {
         }
     }
 
-    public List<PasswordEntry> getPasswordEntriesByUserId(Integer userId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from PasswordEntry where user.id = :userId", PasswordEntry.class)
-                    .setParameter("userId", userId)
-                    .list();
-        }
-    }
-
-    public void deletePasswordEntryById(Integer id) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            PasswordEntry passwordEntry = session.get(PasswordEntry.class, id);
-            if (passwordEntry != null) {
-                session.delete(passwordEntry);
-                System.out.println("Password entry deleted successfully.");
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Updates an existing password entry in the database.
+     * Increments the times edited counter for tracking changes.
+     *
+     * @param passwordEntry The {@link PasswordEntry} object containing updated information.
+     */
     public void updatePasswordEntry(PasswordEntry passwordEntry) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -75,7 +65,6 @@ public class PasswordEntryDAO {
             if (existingEntry != null) {
                 existingEntry.setPassword(passwordEntry.getPassword());
                 existingEntry.incrementTimesEdited();
-
                 session.update(existingEntry);
             }
 
@@ -86,6 +75,12 @@ public class PasswordEntryDAO {
         }
     }
 
+    /**
+     * Deletes a password entry based on website and username.
+     *
+     * @param website  The website associated with the password entry.
+     * @param username The username associated with the password entry.
+     */
     public void deletePasswordEntry(String website, String username) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -107,8 +102,14 @@ public class PasswordEntryDAO {
         }
     }
 
+    /**
+     * Retrieves a specific password entry based on website and username.
+     *
+     * @param website  The website associated with the password entry.
+     * @param username The username associated with the password entry.
+     * @return The {@link PasswordEntry} object if found, otherwise {@code null}.
+     */
     public PasswordEntry getPasswordEntry(String website, String username) {
-
         PasswordEntry passwordEntry = null;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -125,6 +126,11 @@ public class PasswordEntryDAO {
         return passwordEntry;
     }
 
+    /**
+     * Retrieves a map containing the number of times each user's passwords have been edited.
+     *
+     * @return A map where the key is the user's full name and the value is the total count of password edits.
+     */
     public Map<String, Integer> getPasswordChangeCounts() {
         Map<String, Integer> passwordChangeCounts = new HashMap<>();
 

@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Export JSON strategy class that implements the ExportStrategy interface.
+ */
 public class ExportJson implements ExportStrategy {
 
     @Override

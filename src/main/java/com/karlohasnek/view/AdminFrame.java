@@ -15,9 +15,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Frame for the admin panel.
+ */
 public class AdminFrame extends JFrame {
 
     private PasswordEntryDAO passwordEntryDAO;
@@ -37,16 +39,27 @@ public class AdminFrame extends JFrame {
         layoutComps();
     }
 
+    /**
+     * Lays out the components of the frame.
+     */
     private void layoutComps() {
         setLayout(new MigLayout("", "[grow]", "[grow]"));
         add(chartPanel, "w90%, h90%");
     }
 
+    /**
+     * Initializes the components of the frame.
+     */
     private void initComps() {
         passwordEntryDAO = new PasswordEntryDAO();
         chartPanel = new ChartPanel(createChart(createDataset()));
     }
 
+    /**
+     * Creates the dataset for the chart.
+     *
+     * @return the dataset
+     */
     private CategoryDataset createDataset() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -59,6 +72,12 @@ public class AdminFrame extends JFrame {
         return dataset;
     }
 
+    /**
+     * Creates the chart.
+     *
+     * @param dataset the dataset
+     * @return the chart
+     */
     private JFreeChart createChart(CategoryDataset dataset) {
         JFreeChart chart = ChartFactory.createBarChart(
                 "User Password Change Counts", // Chart title

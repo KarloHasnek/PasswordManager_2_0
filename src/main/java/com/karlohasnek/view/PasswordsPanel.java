@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.util.List;
 
 /**
- * This class is used as a container for instances of PasswordPanel class.
+ * This class is used as a container for instances of PasswordEntryPanel class.
  */
 public class PasswordsPanel extends JPanel {
 
@@ -19,15 +19,16 @@ public class PasswordsPanel extends JPanel {
 
     /**
      * Constructor for the passwords panel.
+     * Initializes the panel with a border and layout.
      */
     public PasswordsPanel() {
         setBorder(BorderFactory.createTitledBorder("My passwords"));
         setLayout(new MigLayout("w 680"));
-
     }
 
     /**
-     * This method is used to update the panel with the passwords.
+     * Updates the panel with the latest passwords.
+     * Clears the existing content and re-adds password entries dynamically.
      */
     public void updatePasswords() {
         removeAll();
@@ -46,27 +47,38 @@ public class PasswordsPanel extends JPanel {
     }
 
     /**
-     * Setter for the user.
-     * @param user the user to be set
+     * Sets the user for this panel.
+     * @param user the user whose passwords will be displayed.
      */
     public void setUser(User user) {
         this.user = user;
     }
 
     /**
-     * Setter for the credentials and web adresses.
-     * @param passwords a map containing String web adresses as keys and maps containing String usernames and passwords as values
+     * Sets the list of password entries to be displayed.
+     * @param passwords the list of password entries to be shown in the panel.
      */
     public void setPasswords(List<PasswordEntry> passwords) {
         this.passwords = passwords;
     }
 
+    /**
+     * Removes a password entry from the database and updates the panel.
+     * @param website  the website associated with the password.
+     * @param username the username associated with the password.
+     */
     public void removePassword(String website, String username) {
         passwordEntryDAO.deletePasswordEntry(website, username);
         passwords.remove(passwords.stream().filter(p -> p.getWebsite().equals(website) && p.getUsername().equals(username)).findFirst().get());
         updatePasswords();
     }
 
+    /**
+     * Edits an existing password entry in the database and updates the panel.
+     * @param website     the website associated with the password.
+     * @param username    the username associated with the password.
+     * @param newPassword the new password to be updated.
+     */
     public void editPassword(String website, String username, String newPassword) {
         PasswordEntry passwordEntry = passwordEntryDAO.getPasswordEntry(website, username);
         passwordEntry.setPassword(newPassword);

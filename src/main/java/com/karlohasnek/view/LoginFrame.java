@@ -2,7 +2,6 @@ package com.karlohasnek.view;
 
 import com.karlohasnek.models.Credential;
 import com.karlohasnek.models.User;
-import jakarta.persistence.Query;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -130,10 +129,5 @@ public class LoginFrame extends JFrame {
                 new RegisterFrame().setAlwaysOnTop(true);
             }
         });
-    }
-
-    public void clearFields() {
-        usernameField.setText("");
-        passwordField.setText("");
     }
 }

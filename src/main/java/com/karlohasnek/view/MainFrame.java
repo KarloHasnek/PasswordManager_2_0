@@ -250,16 +250,29 @@ public class MainFrame extends JFrame {
         return jMenuBar;
     }
 
+    /**
+     * Returns the user.
+     *
+     * @return user
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Updates the passwords panel with the passwords of the user.
+     */
     public void updatePasswords() {
         passwordsPanel.setPasswords(passwordEntryDAO.getAllPasswordEntries(user.getId()));
         System.out.println("updatePasswords of passwordsPanel");
         passwordsPanel.updatePasswords();
     }
 
+    /**
+     * Sets the user.
+     *
+     * @param user
+     */
     public void setUser(User user) {
         this.user = user;
     }

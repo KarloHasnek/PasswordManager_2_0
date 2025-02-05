@@ -6,8 +6,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) for managing {@link User} entities.
+ * Provides CRUD operations and utility methods for interacting with the database.
+ */
 public class UserDAO {
 
+    /**
+     * Saves a new user to the database.
+     *
+     * @param user The user entity to be saved.
+     */
     public void saveUser(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -20,9 +29,15 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Retrieves a user by their username.
+     *
+     * @param username The username of the user.
+     * @return The {@link User} object if found, otherwise {@code null}.
+     */
     public User getUserByUsername(String username) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return (User) session.createQuery("select u from User u join u.credential c where c.username = :username", User.class)
+            return session.createQuery("select u from User u join u.credential c where c.username = :username", User.class)
                     .setParameter("username", username)
                     .uniqueResult();
         } catch (Exception e) {
@@ -32,18 +47,33 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Checks if a user exists in the database by their username.
+     *
+     * @param username The username to check.
+     * @return {@code true} if the user exists, otherwise {@code false}.
+     */
     public boolean checkUserExists(String username) {
         User user = getUserByUsername(username);
-//        System.out.println("User: " + user);
         return user != null;
     }
 
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return A list of all {@link User} entities.
+     */
     public List<User> getAllUsers() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from User", User.class).list();
         }
     }
 
+    /**
+     * Updates an existing user with new information.
+     *
+     * @param newUserInfo The {@link User} object containing updated information.
+     */
     public void updateUser(User newUserInfo) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -61,13 +91,6 @@ public class UserDAO {
                     existingUser.getCredential().setPassword(newUserInfo.getCredential().getPassword());
                 }
 
-//                if (existingUser.getPasswordEntries() != null && newUserInfo.getPasswordEntries() != null) {
-//                    // Clear current PasswordEntries and add new ones (or modify them as required)
-//                    existingUser.setPasswordEntries(newUserInfo.getPasswordEntries());
-//                    // You can also iterate through existing password entries and update them if necessary
-//                }
-
-                // Commit the transaction to save the updated data
                 session.update(existingUser);
                 transaction.commit();
             } else {
@@ -80,23 +103,12 @@ public class UserDAO {
         }
     }
 
-
-    public void deleteUserById(Integer id) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            User user = session.get(User.class, id);
-            if (user != null) {
-                session.delete(user);
-                System.out.println("User deleted successfully.");
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Retrieves a user along with their password entries.
+     *
+     * @param userId The ID of the user.
+     * @return The {@link User} object with password entries if found, otherwise {@code null}.
+     */
     public User getUserWithPasswordEntries(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from User u left join fetch u.passwordEntries where u.id = :userId", User.class)
@@ -108,4 +120,3 @@ public class UserDAO {
         }
     }
 }
-

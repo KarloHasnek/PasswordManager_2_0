@@ -180,6 +180,12 @@ public class RegisterFrame extends JFrame {
         return sb;
     }
 
+    /**
+     * This method calculates the age of the user based on the birth date.
+     *
+     * @param birthDate the birth date of the user
+     * @return the age of the user
+     */
     private int calculateAge(Date birthDate) {
         Calendar birthCalendar = Calendar.getInstance();
         birthCalendar.setTime(birthDate);
