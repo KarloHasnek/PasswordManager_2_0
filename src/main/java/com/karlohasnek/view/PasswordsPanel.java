@@ -37,7 +37,7 @@ public class PasswordsPanel extends JPanel {
         System.out.println("Updating passwords");
 
         for (PasswordEntry password : passwords) {
-            PasswordPanel pp = new PasswordPanel(password.getWebsite(), password.getUsername(), password.getPassword(), this);
+            PasswordEntryPanel pp = new PasswordEntryPanel(password.getWebsite(), password.getUsername(), password.getPassword(), this);
             add(pp, "wrap");
         }
 

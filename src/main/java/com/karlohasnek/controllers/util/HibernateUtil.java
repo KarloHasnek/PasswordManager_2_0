@@ -1,4 +1,4 @@
-package com.karlohasnek.controllers;
+package com.karlohasnek.controllers.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

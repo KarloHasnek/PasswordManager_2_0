@@ -1,6 +1,5 @@
 package com.karlohasnek.view;
 
-import com.karlohasnek.controllers.PasswordEntryDAO;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -11,7 +10,7 @@ import java.awt.event.ActionListener;
 /**
  * This class is used for storing the credentials for a website of a user.
  */
-public class PasswordPanel extends JPanel {
+public class PasswordEntryPanel extends JPanel {
 
     private JLabel website;
     private JLabel username;
@@ -23,12 +22,13 @@ public class PasswordPanel extends JPanel {
     private PasswordsPanel passwordsPanel;
 
     /**
+     *
      * Constructor for the password panel.
      * @param website string representing the website adress
      * @param username string representing the username
      * @param password string representing the password
      */
-    public PasswordPanel(String website, String username, String password, PasswordsPanel passwordsPanel) {
+    public PasswordEntryPanel(String website, String username, String password, PasswordsPanel passwordsPanel) {
         this.website = new JLabel(website);
         this.username = new JLabel(username);
         this.password = new JLabel(password);

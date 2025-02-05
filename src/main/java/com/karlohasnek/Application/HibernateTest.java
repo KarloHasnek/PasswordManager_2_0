@@ -1,6 +1,6 @@
 package com.karlohasnek.Application;
 
-import com.karlohasnek.controllers.HibernateUtil;
+import com.karlohasnek.controllers.util.HibernateUtil;
 import com.karlohasnek.models.Credential;
 import com.karlohasnek.models.PasswordEntry;
 import com.karlohasnek.models.User;

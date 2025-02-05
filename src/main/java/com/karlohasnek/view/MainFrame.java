@@ -1,13 +1,13 @@
 package com.karlohasnek.view;
 
 import com.karlohasnek.controllers.CredentialDAO;
-import com.karlohasnek.controllers.HibernateUtil;
+import com.karlohasnek.controllers.util.HibernateUtil;
 import com.karlohasnek.controllers.PasswordEntryDAO;
 import com.karlohasnek.controllers.UserDAO;
 import com.karlohasnek.models.Credential;
 import com.karlohasnek.models.User;
-import com.karlohasnek.strategies.ExportJson;
-import com.karlohasnek.strategies.ExportStrategy;
+import com.karlohasnek.models.strategies.ExportJson;
+import com.karlohasnek.models.strategies.ExportStrategy;
 import jakarta.persistence.Query;
 import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;

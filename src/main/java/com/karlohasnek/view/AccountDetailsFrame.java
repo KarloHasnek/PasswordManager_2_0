@@ -1,5 +1,6 @@
 package com.karlohasnek.view;
 
+import com.karlohasnek.controllers.UserDAO;
 import com.karlohasnek.models.User;
 import net.miginfocom.swing.MigLayout;
 
@@ -22,6 +23,7 @@ public class AccountDetailsFrame extends JFrame {
     private JButton saveButton;
     private JButton cancelButton;
     private JButton editButton;
+    private UserDAO userDAO = new UserDAO();
 
     /**
      * Constructor for the AccountDetailsFrame class.
@@ -123,21 +125,23 @@ public class AccountDetailsFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-//                if (nameField.getText().equals("") || surnameField.getText().equals("") || ageField.getText().equals("") || usernameField.getText().equals("") || passwordField.getText().equals("")) {
-//                    JOptionPane.showMessageDialog(null, "Please fill in all the fields!", "Error", JOptionPane.ERROR_MESSAGE);
-//                } else if (DBHandler.isUsernamePresent(usernameField.getText())) {
-//                    JOptionPane.showMessageDialog(null, "Username already exists!", "Error", JOptionPane.ERROR_MESSAGE);
-//                } else {
-//                    DBHandler.removeFromDB(user);
-//                    user.setName(nameField.getText());
-//                    user.setSurname(surnameField.getText());
-//                    user.setAge(ageField.getText());
-//                    user.setCredentials(new HashMap<>());
-//                    user.getCredentials().put(usernameField.getText(), passwordField.getText());
-//                    JOptionPane.showMessageDialog(null, "Account details saved successfully!");
-//                    DBHandler.addToDB(user);
-//                    dispose();
-//                }
+                if (nameField.getText().isEmpty() || surnameField.getText().isEmpty() || ageField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all the fields!", "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (userDAO.checkUserExists(usernameField.getText()) && !usernameField.getText().equals(user.getCredential().getUsername())) {
+                    JOptionPane.showMessageDialog(null, "Username already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    System.out.println("Old user: " + user);
+                    user.setName(nameField.getText());
+                    user.setSurname(surnameField.getText());
+                    user.setAge(Integer.parseInt(ageField.getText()));
+                    user.getCredential().setUsername(usernameField.getText());
+                    user.getCredential().setPassword(passwordField.getText());
+                    System.out.println("User: " + user);
+                    System.out.println("Credentials: " + user.getCredential());
+                    userDAO.updateUser(user);
+                    JOptionPane.showMessageDialog(null, "Account details saved successfully!");
+                    dispose();
+                }
             }
         });
     }

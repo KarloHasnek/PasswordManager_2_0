@@ -1,5 +1,6 @@
 package com.karlohasnek.controllers;
 
+import com.karlohasnek.controllers.util.HibernateUtil;
 import com.karlohasnek.models.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -19,10 +20,22 @@ public class UserDAO {
         }
     }
 
-    public User getUserById(Integer id) {
+    public User getUserByUsername(String username) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(User.class, id);
+            return (User) session.createQuery("select u from User u join u.credential c where c.username = :username", User.class)
+                    .setParameter("username", username)
+                    .uniqueResult();
+        } catch (Exception e) {
+            System.out.println("Error getting user by username: " + username);
+            e.printStackTrace();
+            return null;
         }
+    }
+
+    public boolean checkUserExists(String username) {
+        User user = getUserByUsername(username);
+//        System.out.println("User: " + user);
+        return user != null;
     }
 
     public List<User> getAllUsers() {
@@ -31,17 +44,42 @@ public class UserDAO {
         }
     }
 
-    public void updateUser(User user) {
+    public void updateUser(User newUserInfo) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.update(user);
-            transaction.commit();
+
+            User existingUser = session.get(User.class, newUserInfo.getId());
+
+            if (existingUser != null) {
+                existingUser.setName(newUserInfo.getName());
+                existingUser.setSurname(newUserInfo.getSurname());
+                existingUser.setAge(newUserInfo.getAge());
+
+                if (existingUser.getCredential() != null && newUserInfo.getCredential() != null) {
+                    existingUser.getCredential().setUsername(newUserInfo.getCredential().getUsername());
+                    existingUser.getCredential().setPassword(newUserInfo.getCredential().getPassword());
+                }
+
+//                if (existingUser.getPasswordEntries() != null && newUserInfo.getPasswordEntries() != null) {
+//                    // Clear current PasswordEntries and add new ones (or modify them as required)
+//                    existingUser.setPasswordEntries(newUserInfo.getPasswordEntries());
+//                    // You can also iterate through existing password entries and update them if necessary
+//                }
+
+                // Commit the transaction to save the updated data
+                session.update(existingUser);
+                transaction.commit();
+            } else {
+                System.out.println("User not found for id: " + newUserInfo.getId());
+            }
+
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            System.out.println("Error updating user: " + newUserInfo);
         }
     }
+
 
     public void deleteUserById(Integer id) {
         Transaction transaction = null;

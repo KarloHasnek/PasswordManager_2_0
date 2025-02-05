@@ -1,5 +1,6 @@
 package com.karlohasnek.controllers;
 
+import com.karlohasnek.controllers.util.HibernateUtil;
 import com.karlohasnek.models.Credential;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
