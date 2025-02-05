@@ -5,7 +5,10 @@ import com.karlohasnek.models.PasswordEntry;
 import jakarta.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PasswordEntryDAO {
 
@@ -120,5 +123,22 @@ public class PasswordEntryDAO {
         }
 
         return passwordEntry;
+    }
+
+    public Map<String, Integer> getPasswordChangeCounts() {
+        Map<String, Integer> passwordChangeCounts = new HashMap<>();
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<PasswordEntry> passwordEntries = session.createQuery("from PasswordEntry", PasswordEntry.class).getResultList();
+
+            for (PasswordEntry entry : passwordEntries) {
+                String username = entry.getUser().getName() + " " + entry.getUser().getSurname();
+                passwordChangeCounts.put(username, passwordChangeCounts.getOrDefault(username, 0) + entry.getTimesEdited());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return passwordChangeCounts;
     }
 }

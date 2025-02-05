@@ -112,8 +112,12 @@ public class LoginFrame extends JFrame {
                         return;
                     }
 
-
-                    loginListener.loginEventOccurred(new LoginEvent(this, username, password));
+                    if (usernameField.getText().equals("admin") && passwordField.getText().equals("admin")) {
+                        new AdminFrame().setAlwaysOnTop(true);
+                        dispose();
+                    } else {
+                        loginListener.loginEventOccurred(new LoginEvent(this, username, password));
+                    }
 
                 }
             });
