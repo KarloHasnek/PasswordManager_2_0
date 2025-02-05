@@ -1,5 +1,6 @@
 package com.karlohasnek.view;
 
+import com.karlohasnek.controllers.PasswordEntryDAO;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -17,6 +18,8 @@ public class PasswordPanel extends JPanel {
     private JLabel password;
     private String passwordString;
     private JButton showPasswordButton;
+    private JButton deletePasswordButton;
+    private PasswordsPanel passwordsPanel;
 
     /**
      * Constructor for the password panel.
@@ -24,11 +27,12 @@ public class PasswordPanel extends JPanel {
      * @param username string representing the username
      * @param password string representing the password
      */
-    public PasswordPanel(String website, String username, String password) {
+    public PasswordPanel(String website, String username, String password, PasswordsPanel passwordsPanel) {
         this.website = new JLabel(website);
         this.username = new JLabel(username);
         this.password = new JLabel(password);
         this.passwordString = password;
+        this.passwordsPanel = passwordsPanel;
         initComps();
         layoutComps();
         activateComps();
@@ -40,6 +44,7 @@ public class PasswordPanel extends JPanel {
      */
     private void initComps() {
         showPasswordButton = new JButton("Show");
+        deletePasswordButton = new JButton("Delete");
         setBorder(BorderFactory.createLineBorder(Color.lightGray));
     }
 
@@ -47,11 +52,12 @@ public class PasswordPanel extends JPanel {
      * Lays out the components.
      */
     private void layoutComps() {
-        setLayout(new MigLayout("fillx, insets 0, gapx 20, wrap 4, w 675:675:675"));
+        setLayout(new MigLayout("fillx, insets 0, gapx 20, wrap 5, w 675:675:675"));
         add(website, "gapbefore 5, growx, width 25%");
         add(username, "growx, width 25%");
         add(password, "growx, width 25%");
-        add(showPasswordButton, "growx, width 25%, w 75:75:75, align right");
+        add(showPasswordButton, "growx, width 25%, w 75:75:75");
+        add(deletePasswordButton, "growx, width 25%, w 75:75:75, align right");
     }
 
     /**
@@ -60,6 +66,7 @@ public class PasswordPanel extends JPanel {
     private void hidePassword() {
         password.setText(password.getText().replaceAll(".", "*"));
     }
+
 
     /**
      * Activates the components.
@@ -74,6 +81,16 @@ public class PasswordPanel extends JPanel {
                 } else {
                     showPasswordButton.setText("Hide");
                     password.setText(passwordString);
+                }
+            }
+        });
+
+        deletePasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this password?", "Delete Password", JOptionPane.YES_NO_OPTION);
+                if (option == 0) {
+                    passwordsPanel.removePassword(website.getText(), username.getText());
                 }
             }
         });

@@ -13,7 +13,7 @@ public class PasswordDialogFrame extends JFrame {
     private JTextField usernameField;
     private JTextField passwordField;
     private JButton addButton;
-    private MainActionListener mainActionListener;
+    private MainEvent mainActionListener;
 
     /**
      * Constructor for the password dialog frame.
@@ -97,7 +97,7 @@ public class PasswordDialogFrame extends JFrame {
      * Setter for main action listener.
      * @param mainActionListener - main action listener
      */
-    public void setMainActionListener(MainActionListener mainActionListener) {
+    public void setMainActionListener(MainEvent mainActionListener) {
         this.mainActionListener = mainActionListener;
     }
 }

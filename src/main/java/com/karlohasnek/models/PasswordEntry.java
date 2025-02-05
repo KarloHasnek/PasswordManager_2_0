@@ -23,6 +23,9 @@ public class PasswordEntry {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
+    @Column(name = "times_edited")
+    private int timesEdited = 0;
+
     public PasswordEntry() {
     }
 
@@ -71,6 +74,18 @@ public class PasswordEntry {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getTimesEdited() {
+        return timesEdited;
+    }
+
+    public void setTimesEdited(int timesEdited) {
+        this.timesEdited = timesEdited;
+    }
+
+    public void incrementTimesEdited() {
+        this.timesEdited++;
     }
 
     @Override

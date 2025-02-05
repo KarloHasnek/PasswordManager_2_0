@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * This class is responsible for handling the event that occurs between MainFrame and PasswordDialogFrame.
  */
-public class MainActionListener implements ActionListener {
+public class MainEvent implements ActionListener {
 
     private MainFrame mainFrame;
     private PasswordDialogFrame passwordDialogFrame;
@@ -29,7 +29,7 @@ public class MainActionListener implements ActionListener {
             String website = passwordDialogFrame.getWebsiteField().getText();
             String username = passwordDialogFrame.getUsernameField().getText();
             String password = passwordDialogFrame.getPasswordField().getText();
-            passwordEntryDAO.updatePasswordEntry(new PasswordEntry(website, username, password, mainFrame.getUser()));
+            passwordEntryDAO.savePasswordEntry(new PasswordEntry(website, username, password, mainFrame.getUser()));
             System.out.println(mainFrame.getUser());
 
             User user = userDAO.getUserWithPasswordEntries(mainFrame.getUser().getId());

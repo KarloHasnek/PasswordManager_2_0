@@ -1,12 +1,12 @@
 package com.karlohasnek.view;
 
+import com.karlohasnek.controllers.PasswordEntryDAO;
 import com.karlohasnek.models.PasswordEntry;
 import com.karlohasnek.models.User;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is used as a container for instances of PasswordPanel class.
@@ -15,6 +15,7 @@ public class PasswordsPanel extends JPanel {
 
     private User user;
     private List<PasswordEntry> passwords;
+    private PasswordEntryDAO passwordEntryDAO = new PasswordEntryDAO();
 
     /**
      * Constructor for the passwords panel.
@@ -22,6 +23,7 @@ public class PasswordsPanel extends JPanel {
     public PasswordsPanel() {
         setBorder(BorderFactory.createTitledBorder("My passwords"));
         setLayout(new MigLayout("w 680"));
+
     }
 
     /**
@@ -31,10 +33,16 @@ public class PasswordsPanel extends JPanel {
         removeAll();
         revalidate();
         repaint();
+
+        System.out.println("Updating passwords");
+
         for (PasswordEntry password : passwords) {
-            PasswordPanel pp = new PasswordPanel(password.getWebsite(), password.getUsername(), password.getPassword());
+            PasswordPanel pp = new PasswordPanel(password.getWebsite(), password.getUsername(), password.getPassword(), this);
             add(pp, "wrap");
         }
+
+        revalidate();
+        repaint();
     }
 
     /**
@@ -51,5 +59,11 @@ public class PasswordsPanel extends JPanel {
      */
     public void setPasswords(List<PasswordEntry> passwords) {
         this.passwords = passwords;
+    }
+
+    public void removePassword(String website, String username) {
+        passwordEntryDAO.deletePasswordEntry(website, username);
+        passwords.remove(passwords.stream().filter(p -> p.getWebsite().equals(website) && p.getUsername().equals(username)).findFirst().get());
+        updatePasswords();
     }
 }

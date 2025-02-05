@@ -19,7 +19,7 @@ public class UserDAO {
         }
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(User.class, id);
         }
@@ -43,7 +43,7 @@ public class UserDAO {
         }
     }
 
-    public void deleteUserById(Long id) {
+    public void deleteUserById(Integer id) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -59,7 +59,7 @@ public class UserDAO {
         }
     }
 
-    public User getUserWithPasswordEntries(Long userId) {
+    public User getUserWithPasswordEntries(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from User u left join fetch u.passwordEntries where u.id = :userId", User.class)
                     .setParameter("userId", userId)

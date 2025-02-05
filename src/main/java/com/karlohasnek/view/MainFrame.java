@@ -15,11 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Map;
 
 public class MainFrame extends JFrame {
 
@@ -39,7 +35,7 @@ public class MainFrame extends JFrame {
     private JMenuItem aboutItem;
     private JMenuItem customerServiceItem;
     private PasswordDialogFrame passwordDialogFrame;
-    private MainActionListener mainActionListener;
+    private MainEvent mainActionListener;
     private CredentialDAO credentialDAO;
     private UserDAO userDAO;
     private PasswordEntryDAO passwordEntryDAO;
@@ -133,7 +129,7 @@ public class MainFrame extends JFrame {
      */
     private void activateComps() {
 
-        mainActionListener = new MainActionListener();
+        mainActionListener = new MainEvent();
         mainActionListener.setMainFrame(this);
         mainActionListener.setPasswordDialogFrame(passwordDialogFrame);
         passwordDialogFrame.setMainActionListener(mainActionListener);

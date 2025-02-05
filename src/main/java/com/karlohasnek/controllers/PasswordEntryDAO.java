@@ -21,13 +21,13 @@ public class PasswordEntryDAO {
         }
     }
 
-    public PasswordEntry getPasswordEntryById(Long id) {
+    public PasswordEntry getPasswordEntryById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(PasswordEntry.class, id);
         }
     }
 
-    public List<PasswordEntry> getAllPasswordEntries(Long userId) {
+    public List<PasswordEntry> getAllPasswordEntries(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Query for PasswordEntries associated with a specific userId
             Query query = session.createQuery("from PasswordEntry p where p.user.id = :userId", PasswordEntry.class);
@@ -39,7 +39,7 @@ public class PasswordEntryDAO {
         }
     }
 
-    public List<PasswordEntry> getPasswordEntriesByUserId(Long userId) {
+    public List<PasswordEntry> getPasswordEntriesByUserId(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("from PasswordEntry where user.id = :userId", PasswordEntry.class)
                     .setParameter("userId", userId)
@@ -47,19 +47,7 @@ public class PasswordEntryDAO {
         }
     }
 
-    public void updatePasswordEntry(PasswordEntry passwordEntry) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.update(passwordEntry);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
-    }
-
-    public void deletePasswordEntryById(Long id) {
+    public void deletePasswordEntryById(Integer id) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -75,5 +63,45 @@ public class PasswordEntryDAO {
         }
     }
 
+    public void updatePasswordEntry(PasswordEntry passwordEntry) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
+            // Fetch the current entity from DB
+            PasswordEntry existingEntry = session.get(PasswordEntry.class, passwordEntry.getId());
+            if (existingEntry != null) {
+                existingEntry.setPassword(passwordEntry.getPassword());
+                existingEntry.incrementTimesEdited();
+
+                session.update(existingEntry);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePasswordEntry(String website, String username) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Query query = session.createQuery("from PasswordEntry p where p.website = :website and p.username = :username", PasswordEntry.class);
+            query.setParameter("website", website);
+            query.setParameter("username", username);
+            PasswordEntry passwordEntry = (PasswordEntry) query.getSingleResult();
+
+            if (passwordEntry != null) {
+                session.delete(passwordEntry);
+                System.out.println("Password entry deleted successfully.");
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
 }
