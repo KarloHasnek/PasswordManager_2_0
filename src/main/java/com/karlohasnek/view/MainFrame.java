@@ -36,6 +36,7 @@ public class MainFrame extends JFrame {
     private JMenuItem detailsItem;
     private JMenuItem aboutItem;
     private JMenuItem customerServiceItem;
+    private JMenuItem logOutItem;
     private PasswordDialogFrame passwordDialogFrame;
     private MainEvent mainActionListener;
     private CredentialDAO credentialDAO;
@@ -181,7 +182,7 @@ public class MainFrame extends JFrame {
         aboutItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String message = "Password Manager v1.0\nCreator: Karlo Hasnek";
+                String message = "Password Manager v2.0\nCreator: Karlo Hasnek";
                 JOptionPane.showMessageDialog(MainFrame.this, message, "About", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -195,6 +196,19 @@ public class MainFrame extends JFrame {
                 JOptionPane.showMessageDialog(MainFrame.this, message, "Customer service", JOptionPane.INFORMATION_MESSAGE);
             }
         });
+
+        logOutItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int option = JOptionPane.showConfirmDialog(MainFrame.this, "Are you sure you want to log out?", "Log out", JOptionPane.YES_NO_OPTION);
+                if (option == 0) {
+                    System.out.println("Logging out...");
+                        user = null;
+                        dispose();
+                        new MainFrame();
+                }
+            }
+        });
     }
 
     /**
@@ -206,6 +220,7 @@ public class MainFrame extends JFrame {
         JMenu fileMenu = new JMenu("File");
         JMenu accountMenu = new JMenu("Account");
         JMenu helpMenu = new JMenu("Help");
+        logOutItem = new JMenuItem("Log out");
         exportItem = new JMenuItem("Export as...");
         exportItem.setIcon(new ImageIcon("src/main/resources/export.png"));
         addItem = new JMenuItem("Add new password");
@@ -229,6 +244,7 @@ public class MainFrame extends JFrame {
         jMenuBar.add(fileMenu);
         jMenuBar.add(accountMenu);
         jMenuBar.add(helpMenu);
+        jMenuBar.add(logOutItem);
 
 
         return jMenuBar;
