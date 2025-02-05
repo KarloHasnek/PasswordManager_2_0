@@ -2,6 +2,8 @@ package com.karlohasnek.models;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "PasswordEntry")
 public class PasswordEntry {
@@ -24,7 +26,7 @@ public class PasswordEntry {
     private User user;
 
     @Column(name = "times_edited")
-    private int timesEdited = 0;
+    private int timesEdited;
 
     public PasswordEntry() {
     }
@@ -34,6 +36,7 @@ public class PasswordEntry {
         this.username = username;
         this.password = password;
         this.user = user;
+        this.timesEdited = 0;
     }
 
     public int getId() {

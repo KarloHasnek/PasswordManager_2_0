@@ -39,6 +39,7 @@ public class MainFrame extends JFrame {
     private CredentialDAO credentialDAO;
     private UserDAO userDAO;
     private PasswordEntryDAO passwordEntryDAO;
+    private ExportStrategy exportStrategy;
 
     public MainFrame() {
         super("Password Manager");
@@ -139,12 +140,13 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fileChooser = new JFileChooser();
-                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(".txt file", "txt"));
+                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(".json file", "json"));
                 fileChooser.setAcceptAllFileFilterUsed(true);
-                fileChooser.setSelectedFile(new File("passwords.txt"));
+                fileChooser.setSelectedFile(new File("passwords.json"));
                 int returnVal = fileChooser.showSaveDialog(MainFrame.this);
-                if (returnVal == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().getName().endsWith(".txt")) {
-//                    save2File(fileChooser.getSelectedFile());
+                if (returnVal == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().getName().endsWith(".json")) {
+                    exportStrategy = new ExportJson();
+                    exportStrategy.export(fileChooser.getSelectedFile().getAbsolutePath(), passwordEntryDAO.getAllPasswordEntries(user.getId()));
                     JOptionPane.showMessageDialog(MainFrame.this, "File saved", "File saved", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(MainFrame.this, "ERROR: File not saved", "File not saved", JOptionPane.ERROR_MESSAGE);
