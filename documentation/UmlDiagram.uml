@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.karlohasnek.view.AccountDetailsFrame</OriginalElement>
+  <nodes>
+    <node x="840.4405882044791" y="373.35276667596145">com.karlohasnek.controllers.UserDAO</node>
+    <node x="565.5884321641373" y="1442.4659029230559">com.karlohasnek.view.PasswordGenerator</node>
+    <node x="867.3652534005209" y="2431.0834334512174">com.karlohasnek.view.PasswordDialogFrame</node>
+    <node x="812.6109698896225" y="701.6534304220602">com.karlohasnek.view.PasswordsPanel</node>
+    <node x="860.5455633840818" y="1369.0753971181364">com.karlohasnek.models.User</node>
+    <node x="1289.8921409747004" y="864.4386037431566">com.karlohasnek.view.MainFrame</node>
+    <node x="280.5962508834395" y="1064.7680084904594">com.karlohasnek.controllers.PasswordEntryDAO</node>
+    <node x="-77.1175270483761" y="1720.020771580616">com.karlohasnek.view.RegisterFrame</node>
+    <node x="321.726664015496" y="1845.092774816354">com.karlohasnek.view.PasswordEntryPanel</node>
+    <node x="812.1522854995213" y="1157.8204332484086">com.karlohasnek.models.strategies.ExportStrategy</node>
+    <node x="910.7521187309335" y="1947.8613779999691">com.karlohasnek.controllers.util.HibernateUtil</node>
+    <node x="488.635988384769" y="2300.9318917944365">com.karlohasnek.view.AccountDetailsFrame</node>
+    <node x="394.24171664038874" y="803.4315561704923">com.karlohasnek.controllers.CredentialDAO</node>
+    <node x="533.5130649227498" y="-13.348793629813258">com.karlohasnek.models.Credential</node>
+    <node x="116.84589091883203" y="2200.6030107815905">com.karlohasnek.view.LoginListener</node>
+    <node x="195.49252686611692" y="1426.936044735569">com.karlohasnek.models.strategies.ExportJson</node>
+    <node x="726.3383322901298" y="1008.0210304378379">com.karlohasnek.Application.App</node>
+    <node x="116.91942209214005" y="41.808268633040086">com.karlohasnek.view.MainEvent</node>
+    <node x="495.42799433349035" y="437.98290914521715">com.karlohasnek.view.LoginEvent</node>
+    <node x="93.90215024637226" y="454.1990702530085">com.karlohasnek.view.LoginFrame</node>
+    <node x="-111.22874957537891" y="867.7078837951242">com.karlohasnek.models.PasswordEntry</node>
+    <node x="782.6573223148491" y="2187.494297846261">com.karlohasnek.view.AdminFrame</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.karlohasnek.models.strategies.ExportJson" target="com.karlohasnek.models.strategies.ExportStrategy" relationship="REALIZATION">
+      <point x="0.0" y="-44.5" />
+      <point x="349.4925268661169" y="1329.2078837951242" />
+      <point x="966.1522854995213" y="1329.2078837951242" />
+      <point x="0.0" y="31.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.4401123990165086" showDependencies="false" x="714.0" y="1409.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

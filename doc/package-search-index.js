@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.karlohasnek.Application"},{"l":"com.karlohasnek.controllers"},{"l":"com.karlohasnek.controllers.util"},{"l":"com.karlohasnek.models"},{"l":"com.karlohasnek.models.strategies"},{"l":"com.karlohasnek.view"}];updateSearchResults();

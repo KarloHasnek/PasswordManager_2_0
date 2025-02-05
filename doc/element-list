@@ -1,0 +1,6 @@
+com.karlohasnek.Application
+com.karlohasnek.controllers
+com.karlohasnek.controllers.util
+com.karlohasnek.models
+com.karlohasnek.models.strategies
+com.karlohasnek.view

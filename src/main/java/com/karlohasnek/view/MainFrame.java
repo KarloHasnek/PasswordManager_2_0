@@ -72,21 +72,26 @@ public class MainFrame extends JFrame {
                     Session session = HibernateUtil.getSessionFactory().openSession();
                     session.beginTransaction();
 
-                    Query query = session.createQuery("from Credential where username = :username");
-                    query.setParameter("username", e.getUsername());
-                    Credential credential = (Credential) query.getSingleResult();
+                    try {
+                        Query query = session.createQuery("from Credential where username = :username");
+                        query.setParameter("username", e.getUsername());
+                        Credential credential = (Credential) query.getSingleResult();
 
-                    if (credential.getPassword().equals(e.getPassword())) {
-                        user = credential.getUser();
-                        initComps();
-                        layoutComps();
-                        setVisible(true);
-                        activateComps();
-                        updatePasswords();
-                        loginFrame.dispose();
-                    } else {
+                        if (credential.getPassword().equals(e.getPassword())) {
+                            user = credential.getUser();
+                            initComps();
+                            layoutComps();
+                            setVisible(true);
+                            activateComps();
+                            updatePasswords();
+                            loginFrame.dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

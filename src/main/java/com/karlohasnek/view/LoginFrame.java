@@ -20,7 +20,6 @@ public class LoginFrame extends JFrame {
     private JButton logIn;
     private JButton register;
     private List<User> users;
-    private List<Credential> usersCredentials;
     private LoginListener loginListener;
 
     /**
