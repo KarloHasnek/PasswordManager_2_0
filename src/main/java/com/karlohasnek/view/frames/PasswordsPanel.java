@@ -1,4 +1,4 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
 import com.karlohasnek.controllers.PasswordEntryDAO;
 import com.karlohasnek.models.PasswordEntry;

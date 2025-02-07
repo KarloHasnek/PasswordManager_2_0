@@ -1,9 +1,11 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.listeners;
 
 import com.karlohasnek.controllers.PasswordEntryDAO;
 import com.karlohasnek.controllers.UserDAO;
 import com.karlohasnek.models.PasswordEntry;
 import com.karlohasnek.models.User;
+import com.karlohasnek.view.frames.MainFrame;
+import com.karlohasnek.view.frames.PasswordDialogFrame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

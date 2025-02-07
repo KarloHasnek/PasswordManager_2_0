@@ -1,5 +1,6 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
+import com.karlohasnek.view.listeners.MainEvent;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

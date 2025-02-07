@@ -28,6 +28,8 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<PasswordEntry> passwordEntries;
 
+    private transient String plainPassword;
+
     public User() {
     }
 
@@ -35,6 +37,14 @@ public class User {
         this.name = name;
         this.surname = surname;
         this.age = age;
+    }
+
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
     }
 
     public Integer getId() {

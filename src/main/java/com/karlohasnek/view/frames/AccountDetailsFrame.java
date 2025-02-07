@@ -1,13 +1,13 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
 import com.karlohasnek.controllers.UserDAO;
+import com.karlohasnek.controllers.util.PasswordUtil;
 import com.karlohasnek.models.User;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
 /**
  * AccountDetailsFrame class used for displaying and editing the account details of the user.
@@ -53,7 +53,7 @@ public class AccountDetailsFrame extends JFrame {
         surnameField = new JTextField(user.getSurname());
         ageField = new JTextField(String.valueOf(user.getAge()));
         usernameField = new JTextField(user.getCredential().getUsername());
-        passwordField = new JTextField(user.getCredential().getPassword());
+        passwordField = new JTextField(user.getPlainPassword() != null ? user.getPlainPassword() : "");
 
         // Set initial editable state and create buttons
         changeEditable();
@@ -135,7 +135,7 @@ public class AccountDetailsFrame extends JFrame {
                     user.setSurname(surnameField.getText());
                     user.setAge(Integer.parseInt(ageField.getText()));
                     user.getCredential().setUsername(usernameField.getText());
-                    user.getCredential().setPassword(passwordField.getText());
+                    user.getCredential().setPassword(PasswordUtil.hashPassword(passwordField.getText()));
                     System.out.println("User: " + user);
                     System.out.println("Credentials: " + user.getCredential());
                     userDAO.updateUser(user);

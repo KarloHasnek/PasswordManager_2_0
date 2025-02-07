@@ -1,6 +1,7 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
 import com.karlohasnek.controllers.UserDAO;
+import com.karlohasnek.controllers.util.PasswordUtil;
 import com.karlohasnek.models.Credential;
 import com.karlohasnek.models.User;
 import net.miginfocom.swing.MigLayout;
@@ -127,7 +128,7 @@ public class RegisterFrame extends JFrame {
                     resetPasswordField();
                     String messageF = "Something went wrong!\nPlease fill all the fields.";
                     JOptionPane.showMessageDialog(RegisterFrame.this, messageF, "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (userDAO.checkUserExists(usernameField.getText())) {
+                } else if (userDAO.checkUserExists(username)) {
                     System.out.println("Username already exists!");
                     usernameField.setText("");
                     resetPasswordField();
@@ -135,24 +136,18 @@ public class RegisterFrame extends JFrame {
                     JOptionPane.showMessageDialog(RegisterFrame.this, message1, "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (Arrays.toString(passwordField.getPassword()).equals(Arrays.toString(confirmPasswordField.getPassword()))) {
                     System.out.println("Passwords match");
-                    String password = convertPasswordToString(passwordField.getPassword());
-                    Map<String, String> map = new HashMap<>();
-                    map.put(username, password);
-                    System.out.println("age: " + age);
-                    int ageInt = calculateAge((Date) ageSpinner.getValue());
-                    User newUser = new User(name, surname, ageInt);
-                    newUser.setCredential(new Credential(username, password, newUser));
+
+                    String hashedPassword = PasswordUtil.hashPassword(new String(passwordField.getPassword()));
+
+                    User newUser = new User(name, surname, calculateAge((Date) ageSpinner.getValue()));
+                    newUser.setCredential(new Credential(username, hashedPassword, newUser));
+
                     userDAO.saveUser(newUser);
-                    String message2 = "You have successfully registered!";
-                    JOptionPane.showMessageDialog(RegisterFrame.this, message2, "Registration Complete", JOptionPane.INFORMATION_MESSAGE);
-                    if (JOptionPane.OK_OPTION == 0) {
-                        dispose();
-                    }
+
+                    JOptionPane.showMessageDialog(RegisterFrame.this, "You have successfully registered!", "Registration Complete", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
                 } else {
-                    System.out.println("Passwords don't match");
-                    resetPasswordField();
-                    String message = "Oops! Seems like passwords don't match.\nPlease try again";
-                    JOptionPane.showMessageDialog(RegisterFrame.this, message, "Password missmatch", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(RegisterFrame.this, "Oops! Seems like passwords don't match. Please try again", "Password mismatch", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -164,20 +159,6 @@ public class RegisterFrame extends JFrame {
     private void resetPasswordField() {
         passwordField.setText("");
         confirmPasswordField.setText("");
-    }
-
-    /**
-     * This method converts a char array to a String.
-     *
-     * @param password the char array to be converted
-     * @return the converted String
-     */
-    private String convertPasswordToString(char[] password) {
-        String sb = "";
-        for (char c : password) {
-            sb += c;
-        }
-        return sb;
     }
 
     /**

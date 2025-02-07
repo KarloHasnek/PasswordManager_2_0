@@ -1,8 +1,6 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
 import com.karlohasnek.controllers.PasswordEntryDAO;
-import com.karlohasnek.controllers.UserDAO;
-import com.karlohasnek.models.User;
 import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

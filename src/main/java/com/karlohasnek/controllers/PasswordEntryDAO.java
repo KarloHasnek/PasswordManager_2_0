@@ -14,23 +14,15 @@ import java.util.Map;
  * Data Access Object (DAO) for managing {@link PasswordEntry} entities.
  * Provides CRUD operations and utility methods for interacting with password-related data in the database.
  */
-public class PasswordEntryDAO {
+public class PasswordEntryDAO extends BaseDAO {
 
     /**
      * Saves a new password entry to the database.
      *
-     * @param passwordEntry The {@link PasswordEntry} object to be saved.
+     * @param entry The {@link PasswordEntry} object to be saved.
      */
-    public void savePasswordEntry(PasswordEntry passwordEntry) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.save(passwordEntry);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+    public void savePasswordEntry(PasswordEntry entry) {
+        executeInTransaction(session -> session.save(entry));
     }
 
     /**
@@ -40,14 +32,11 @@ public class PasswordEntryDAO {
      * @return A list of {@link PasswordEntry} objects associated with the user.
      */
     public List<PasswordEntry> getAllPasswordEntries(Integer userId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        return fetchInTransaction(session -> {
             Query query = session.createQuery("from PasswordEntry p where p.user.id = :userId", PasswordEntry.class);
             query.setParameter("userId", userId);
             return query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        });
     }
 
     /**
@@ -57,22 +46,14 @@ public class PasswordEntryDAO {
      * @param passwordEntry The {@link PasswordEntry} object containing updated information.
      */
     public void updatePasswordEntry(PasswordEntry passwordEntry) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
+         executeInTransaction(session -> {
             PasswordEntry existingEntry = session.get(PasswordEntry.class, passwordEntry.getId());
             if (existingEntry != null) {
                 existingEntry.setPassword(passwordEntry.getPassword());
                 existingEntry.incrementTimesEdited();
                 session.update(existingEntry);
             }
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+        });
     }
 
     /**
@@ -82,10 +63,7 @@ public class PasswordEntryDAO {
      * @param username The username associated with the password entry.
      */
     public void deletePasswordEntry(String website, String username) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
+        executeInTransaction(session -> {
             Query query = session.createQuery("from PasswordEntry p where p.website = :website and p.username = :username", PasswordEntry.class);
             query.setParameter("website", website);
             query.setParameter("username", username);
@@ -95,11 +73,7 @@ public class PasswordEntryDAO {
                 session.delete(passwordEntry);
                 System.out.println("Password entry deleted successfully.");
             }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+        });
     }
 
     /**
@@ -110,20 +84,12 @@ public class PasswordEntryDAO {
      * @return The {@link PasswordEntry} object if found, otherwise {@code null}.
      */
     public PasswordEntry getPasswordEntry(String website, String username) {
-        PasswordEntry passwordEntry = null;
-
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        return fetchInTransaction(session -> {
             Query query = session.createQuery("from PasswordEntry p where p.website = :website and p.username = :username", PasswordEntry.class);
             query.setParameter("website", website);
             query.setParameter("username", username);
-            passwordEntry = (PasswordEntry) query.getSingleResult();
-        } catch (NullPointerException e) {
-            System.err.println("Password entry not found.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return passwordEntry;
+            return (PasswordEntry) query.getSingleResult();
+        });
     }
 
     /**

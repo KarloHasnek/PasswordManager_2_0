@@ -1,5 +1,6 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
+import com.karlohasnek.controllers.PasswordService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -20,6 +21,8 @@ public class PasswordEntryPanel extends JPanel {
     private JButton editPasswordButton;
     private JButton deletePasswordButton;
     private PasswordsPanel passwordsPanel;
+    private PasswordService passwordService;
+
 
     /**
      *
@@ -48,6 +51,7 @@ public class PasswordEntryPanel extends JPanel {
         editPasswordButton = new JButton("Edit");
         deletePasswordButton = new JButton("Delete");
         setBorder(BorderFactory.createLineBorder(Color.lightGray));
+        passwordService = new PasswordService();
     }
 
     /**
@@ -67,7 +71,7 @@ public class PasswordEntryPanel extends JPanel {
      * Hides the given password.
      */
     private void hidePassword() {
-        password.setText(password.getText().replaceAll(".", "*"));
+        password.setText(passwordService.maskPassword(password.getText()));
     }
 
 
@@ -80,7 +84,7 @@ public class PasswordEntryPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (showPasswordButton.getText().equals("Hide")) {
                     showPasswordButton.setText("Show");
-                    password.setText(password.getText().replaceAll(".", "*"));
+                    password.setText(passwordService.maskPassword(passwordString));
                 } else {
                     showPasswordButton.setText("Hide");
                     password.setText(passwordString);

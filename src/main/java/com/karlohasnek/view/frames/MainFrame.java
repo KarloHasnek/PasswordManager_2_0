@@ -1,4 +1,4 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
 import com.karlohasnek.controllers.CredentialDAO;
 import com.karlohasnek.controllers.util.HibernateUtil;
@@ -8,6 +8,9 @@ import com.karlohasnek.models.Credential;
 import com.karlohasnek.models.User;
 import com.karlohasnek.models.strategies.ExportJson;
 import com.karlohasnek.models.strategies.ExportStrategy;
+import com.karlohasnek.view.listeners.LoginEvent;
+import com.karlohasnek.view.listeners.LoginListener;
+import com.karlohasnek.view.listeners.MainEvent;
 import jakarta.persistence.Query;
 import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;
@@ -67,43 +70,13 @@ public class MainFrame extends JFrame {
         loginFrame.setLoginListener(new LoginListener() {
             @Override
             public void loginEventOccurred(LoginEvent e) {
-
-                try {
-                    Session session = HibernateUtil.getSessionFactory().openSession();
-                    session.beginTransaction();
-
-                    try {
-                        Query query = session.createQuery("from Credential where username = :username");
-                        query.setParameter("username", e.getUsername());
-                        Credential credential = (Credential) query.getSingleResult();
-
-                        if (credential.getPassword().equals(e.getPassword())) {
-                            user = credential.getUser();
-                            initComps();
-                            layoutComps();
-                            setVisible(true);
-                            activateComps();
-                            updatePasswords();
-                            loginFrame.dispose();
-                        } else {
-                            JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(MainFrame.this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            /**
-             * Updates the passwords panel with the passwords of the user.
-             */
-            public void updatePasswords() {
-                passwordsPanel.setPasswords(passwordEntryDAO.getAllPasswordEntries(user.getId()));
-                System.out.println("updatePasswords of passwordsPanel");
-                passwordsPanel.updatePasswords();
+                    user = e.getUser();
+                    initComps();
+                    layoutComps();
+                    setVisible(true);
+                    activateComps();
+                    updatePasswords();
+                    loginFrame.dispose();
             }
         });
         loginFrame.activateComps();

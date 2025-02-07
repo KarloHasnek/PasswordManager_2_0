@@ -1,7 +1,11 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.frames;
 
+import com.karlohasnek.controllers.UserDAO;
+import com.karlohasnek.controllers.util.PasswordUtil;
 import com.karlohasnek.models.Credential;
 import com.karlohasnek.models.User;
+import com.karlohasnek.view.listeners.LoginEvent;
+import com.karlohasnek.view.listeners.LoginListener;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -21,6 +25,7 @@ public class LoginFrame extends JFrame {
     private JButton register;
     private List<User> users;
     private LoginListener loginListener;
+    private UserDAO userDAO;
 
     /**
      * Constructor for the login frame.
@@ -44,6 +49,7 @@ public class LoginFrame extends JFrame {
      * Reads user data from the database, creates labels, text fields, and buttons.
      */
     private void initComps() {
+        userDAO = new UserDAO();
         users = new ArrayList<>();
         icon = new JLabel();
         icon.setIcon(new ImageIcon("src/main/resources/icon64.png"));
@@ -92,34 +98,50 @@ public class LoginFrame extends JFrame {
      * Defines the behavior of the buttons when clicked.
      */
     public void activateComps() {
+        logIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
 
-        if (loginListener != null) {
-
-            logIn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    String username = usernameField.getText();
-                    if (username.equals("")) {
-                        JOptionPane.showMessageDialog(LoginFrame.this, "Please enter a username!", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    String password = new String(passwordField.getPassword());
-                    if (password.equals("")) {
-                        JOptionPane.showMessageDialog(LoginFrame.this, "Please enter a password!", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if (usernameField.getText().equals("admin") && passwordField.getText().equals("admin")) {
-                        new AdminFrame().setAlwaysOnTop(true);
-                        dispose();
-                    } else {
-                        loginListener.loginEventOccurred(new LoginEvent(this, username, password));
-                    }
-
+                if (username.equals("")) {
+                    JOptionPane.showMessageDialog(LoginFrame.this, "Please enter a username!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            });
-        }
+
+                if (password.equals("")) {
+                    JOptionPane.showMessageDialog(LoginFrame.this, "Please enter a password!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (username.equals("admin") && password.equals("admin")) {
+                    dispose();
+                    new AdminFrame().setAlwaysOnTop(true);
+                }
+
+                // Fetch the user from the database using the entered username
+                User user = userDAO.getUserByUsername(username);
+                System.out.println(user);
+                if (user != null) {
+                    Credential storedCredential = user.getCredential();
+                    String hashedPassword = PasswordUtil.hashPassword(password);
+                    System.out.println(hashedPassword);
+                    System.out.println(storedCredential.getPassword());
+
+                    if (hashedPassword.equals(storedCredential.getPassword())) {
+                        System.out.println("Login successful!");
+                        user.setPlainPassword(password);
+                        loginListener.loginEventOccurred(new LoginEvent(this, user));
+                    } else {
+                        System.out.println("Invalid password!");
+                        JOptionPane.showMessageDialog(LoginFrame.this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    System.out.println("User not found!");
+                    JOptionPane.showMessageDialog(LoginFrame.this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         register.addActionListener(new ActionListener() {
             @Override

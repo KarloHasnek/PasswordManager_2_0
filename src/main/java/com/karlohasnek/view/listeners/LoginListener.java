@@ -1,4 +1,4 @@
-package com.karlohasnek.view;
+package com.karlohasnek.view.listeners;
 
 import java.util.EventListener;
 

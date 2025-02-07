@@ -1,7 +1,7 @@
 package com.karlohasnek.Application;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
-import com.karlohasnek.view.MainFrame;
+import com.karlohasnek.view.frames.MainFrame;
 
 import javax.swing.*;
 

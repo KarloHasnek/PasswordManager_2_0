@@ -10,7 +10,7 @@ import java.util.List;
  * Data Access Object (DAO) for managing {@link User} entities.
  * Provides CRUD operations and utility methods for interacting with the database.
  */
-public class UserDAO {
+public class UserDAO extends BaseDAO {
 
     /**
      * Saves a new user to the database.
@@ -18,15 +18,7 @@ public class UserDAO {
      * @param user The user entity to be saved.
      */
     public void saveUser(User user) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.save(user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+        executeInTransaction(session -> session.save(user));
     }
 
     /**
@@ -36,15 +28,10 @@ public class UserDAO {
      * @return The {@link User} object if found, otherwise {@code null}.
      */
     public User getUserByUsername(String username) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("select u from User u join u.credential c where c.username = :username", User.class)
+            return fetchInTransaction(session ->
+                    session.createQuery("select u from User u join u.credential c where c.username = :username", User.class)
                     .setParameter("username", username)
-                    .uniqueResult();
-        } catch (Exception e) {
-            System.out.println("Error getting user by username: " + username);
-            e.printStackTrace();
-            return null;
-        }
+                    .uniqueResult());
     }
 
     /**
@@ -75,10 +62,7 @@ public class UserDAO {
      * @param newUserInfo The {@link User} object containing updated information.
      */
     public void updateUser(User newUserInfo) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
+        executeInTransaction(session -> {
             User existingUser = session.get(User.class, newUserInfo.getId());
 
             if (existingUser != null) {
@@ -92,15 +76,10 @@ public class UserDAO {
                 }
 
                 session.update(existingUser);
-                transaction.commit();
             } else {
                 System.out.println("User not found for id: " + newUserInfo.getId());
             }
-
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            System.out.println("Error updating user: " + newUserInfo);
-        }
+        });
     }
 
     /**
@@ -110,13 +89,10 @@ public class UserDAO {
      * @return The {@link User} object with password entries if found, otherwise {@code null}.
      */
     public User getUserWithPasswordEntries(Integer userId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        return fetchInTransaction(session -> {
             return session.createQuery("from User u left join fetch u.passwordEntries where u.id = :userId", User.class)
                     .setParameter("userId", userId)
                     .uniqueResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        });
     }
 }

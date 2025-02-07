@@ -10,7 +10,7 @@ import java.util.List;
  * Data Access Object (DAO) for managing {@link Credential} entities.
  * Provides CRUD operations for handling credentials in the database.
  */
-public class CredentialDAO {
+public class CredentialDAO extends BaseDAO {
 
     /**
      * Saves a new credential to the database.
@@ -18,15 +18,7 @@ public class CredentialDAO {
      * @param credential The {@link Credential} object to be saved.
      */
     public void saveCredential(Credential credential) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.save(credential);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+        executeInTransaction(session -> session.save(credential));
     }
 
     /**
@@ -35,11 +27,10 @@ public class CredentialDAO {
      * @param id The unique identifier of the credential.
      * @return The {@link Credential} object if found, otherwise {@code null}.
      */
-    public Credential getCredentialById(Long id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Credential.class, id);
-        }
+    public Credential getCredentialById(int id) {
+        return fetchInTransaction(session -> session.get(Credential.class, id));
     }
+
 
     /**
      * Retrieves a list of all credentials stored in the database.
@@ -47,9 +38,9 @@ public class CredentialDAO {
      * @return A list of {@link Credential} objects.
      */
     public List<Credential> getAllCredentials() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from Credential", Credential.class).list();
-        }
+        return fetchInTransaction(session ->
+                session.createQuery("from Credential", Credential.class).list()
+        );
     }
 
     /**
@@ -58,15 +49,9 @@ public class CredentialDAO {
      * @param credential The {@link Credential} object containing updated information.
      */
     public void updateCredential(Credential credential) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
+        executeInTransaction(session -> {
             session.update(credential);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+        });
     }
 
     /**
@@ -74,19 +59,12 @@ public class CredentialDAO {
      *
      * @param id The unique identifier of the credential to be deleted.
      */
-    public void deleteCredentialById(Long id) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
+    public void deleteCredential(int id) {
+        executeInTransaction(session -> {
             Credential credential = session.get(Credential.class, id);
             if (credential != null) {
                 session.delete(credential);
-                System.out.println("Credential deleted successfully.");
             }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+        });
     }
 }
