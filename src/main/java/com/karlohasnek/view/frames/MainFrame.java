@@ -120,7 +120,6 @@ public class MainFrame extends JFrame {
         exportItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileChooser = new JFileChooser();
                 fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(".json file", "json"));
                 fileChooser.setAcceptAllFileFilterUsed(true);
                 fileChooser.setSelectedFile(new File("passwords.json"));

@@ -3,4 +3,5 @@ com.karlohasnek.controllers
 com.karlohasnek.controllers.util
 com.karlohasnek.models
 com.karlohasnek.models.strategies
-com.karlohasnek.view
+com.karlohasnek.view.frames
+com.karlohasnek.view.listeners
